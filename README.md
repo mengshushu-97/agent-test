@@ -29,4 +29,4 @@ kubectl get pods -n test -l app.kubernetes.io/name=agent-test
 
 ## CI/CD
 
-当前不使用镜像仓库，使用 GitHub self-hosted runner 在 k3s 服务器本机构建镜像并部署。先按 [docs/github-runner-setup.md](docs/github-runner-setup.md) 配置 runner，再看 [docs/cicd-local-k3s.md](docs/cicd-local-k3s.md)。
+当前不使用镜像仓库，使用 GitHub self-hosted runner 在 k3s 服务器本机构建镜像并部署。测试环境 push `main` 自动发布，生产环境通过手动 workflow 发布。先按 [docs/github-runner-setup.md](docs/github-runner-setup.md) 配置 runner，再看 [docs/cicd-local-k3s.md](docs/cicd-local-k3s.md)。

@@ -1,30 +1,33 @@
-name: Deploy Test
+name: Deploy Prod
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type deploy-prod to confirm production deployment
+        required: true
 
 concurrency:
-  group: agent-test-test
-  cancel-in-progress: true
+  group: agent-test-prod
+  cancel-in-progress: false
 
 permissions:
   contents: read
 
 jobs:
   deploy:
-    name: Build and deploy agent-test
+    name: Build and deploy agent-test to prod
+    if: ${{ github.event.inputs.confirm == 'deploy-prod' }}
     runs-on:
       - self-hosted
       - k3s
-      - test
+      - prod
+    environment: production
     env:
       APP_NAME: agent-test
       CONTAINER_NAME: agent-test
-      NAMESPACE: test
-      MANIFEST_DIR: k8s/test
+      NAMESPACE: prod
+      MANIFEST_DIR: k8s/prod
       IMAGE_TAG: ${{ github.sha }}
     steps:
       - name: Checkout
@@ -32,7 +35,7 @@ jobs:
 
       - name: Runner preflight
         env:
-          CHECK_NAMESPACE: test
+          CHECK_NAMESPACE: prod
         run: ./scripts/check-runner-prereqs.sh
 
       - name: Test
