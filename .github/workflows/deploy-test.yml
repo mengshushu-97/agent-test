@@ -1,0 +1,42 @@
+name: Deploy Test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: agent-test-test
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy agent-test
+    runs-on:
+      - self-hosted
+      - k3s
+      - test
+    env:
+      APP_NAME: agent-test
+      CONTAINER_NAME: agent-test
+      NAMESPACE: test
+      MANIFEST_DIR: k8s/test
+      IMAGE_TAG: ${{ github.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            python:3.13-slim \
+            sh -lc "pip install -e '.[test]' && python -m unittest tests/test_api_contract.py"
+
+      - name: Build local image and deploy to k3s
+        run: ./scripts/deploy-local-k3s.sh
