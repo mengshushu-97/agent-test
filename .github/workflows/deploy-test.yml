@@ -45,10 +45,12 @@ jobs:
         run: |
           mkdir -p "$HOME/.cache/pip/agent-test"
           docker run --rm \
+            --user "$(id -u):$(id -g)" \
             -v "${{ github.workspace }}:/workspace" \
-            -v "$HOME/.cache/pip/agent-test:/root/.cache/pip" \
+            -v "$HOME/.cache/pip/agent-test:/tmp/pip-cache" \
             -w /workspace \
-            -e PIP_CACHE_DIR=/root/.cache/pip \
+            -e HOME=/tmp \
+            -e PIP_CACHE_DIR=/tmp/pip-cache \
             -e PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/ \
             -e PIP_TRUSTED_HOST=mirrors.aliyun.com \
             python:3.13-slim \
