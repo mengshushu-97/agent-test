@@ -42,7 +42,7 @@ def create_app(dependencies: dict[str, Any] | None = None) -> FastAPI:
 
     logger.info(
         "chain.received",
-        "start success"
+        "start success!"
     )
 
 
