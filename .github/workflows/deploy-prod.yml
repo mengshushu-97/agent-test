@@ -42,11 +42,16 @@ jobs:
 
       - name: Test
         run: |
+          mkdir -p "$HOME/.cache/pip/agent-test"
           docker run --rm \
             -v "${{ github.workspace }}:/workspace" \
+            -v "$HOME/.cache/pip/agent-test:/root/.cache/pip" \
             -w /workspace \
+            -e PIP_CACHE_DIR=/root/.cache/pip \
+            -e PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/ \
+            -e PIP_TRUSTED_HOST=mirrors.aliyun.com \
             python:3.13-slim \
-            sh -lc "pip install -e '.[test]' && python -m unittest tests/test_api_contract.py"
+            sh -lc "pip install --timeout 120 --retries 5 -e '.[test]' && python -m unittest tests/test_api_contract.py"
 
       - name: Build and push Harbor image
         run: ./scripts/build-push-harbor.sh
