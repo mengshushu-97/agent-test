@@ -40,6 +40,12 @@ def create_app(dependencies: dict[str, Any] | None = None) -> FastAPI:
     app = FastAPI(title="agent-test", lifespan=lifespan)
     setup_tracing(app)
 
+    logger.info(
+        "chain.received",
+        "start success"
+    )
+
+
     @app.middleware("http")
     async def log_requests(request: Request, call_next):
         started_at = datetime.now(timezone.utc)
