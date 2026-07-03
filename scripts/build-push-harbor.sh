@@ -32,7 +32,7 @@ fi
 
 echo "Building image: $IMAGE"
 docker pull "$CACHE_IMAGE" >/dev/null 2>&1 || true
-DOCKER_BUILDKIT=1 BUILDKIT_PROGRESS=plain docker build \
+docker build \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --cache-from "$CACHE_IMAGE" \
   -t "$IMAGE" \
