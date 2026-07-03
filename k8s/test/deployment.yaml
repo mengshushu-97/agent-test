@@ -27,7 +27,7 @@ spec:
         - name: harbor-auth
       containers:
         - name: agent-test
-          image: harbor.local/test/agent-test:bootstrap
+          image: harbor.local/test/agent-test:3728dcbb09d72d383336e3f313a0409a76ef3f39
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
